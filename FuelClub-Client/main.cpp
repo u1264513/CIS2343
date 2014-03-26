@@ -1,6 +1,6 @@
-#include "Server.h"
-#include "Client.h"
-#include "Packet.h"
+#include "../Network/Server.h"
+#include "../Network/Packet.h"
+#include "../Network/Client.h"
 
 void Server_Receive(Server::ServerClient* client, Packet* packet) {
 	if (packet->isEncrypted()) packet->crypt();
@@ -14,7 +14,7 @@ void main(){
 	unsigned long BIG_TEST_SIZE = 32;
 	char* BIG_TEST = (char*)malloc(BIG_TEST_SIZE);
 	memset(BIG_TEST, 'A', BIG_TEST_SIZE);
-	BIG_TEST[BIG_TEST_SIZE-1] = 0x00;
+	BIG_TEST[BIG_TEST_SIZE - 1] = 0x00;
 
 	//Create packet
 	Packet pkt((unsigned char*)BIG_TEST, BIG_TEST_SIZE);
@@ -23,7 +23,7 @@ void main(){
 	server->SetRecvCallback(Server_Receive);
 
 	//Client send data
-	pkt.crypt();
+	//pkt.crypt();
 	client->Send(&pkt);
 
 
