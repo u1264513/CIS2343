@@ -9,7 +9,11 @@ void Client_Receive(Packet* packet) {
 }
 
 void main(){
-	Client* client = new Client("localhost", 2663);
+
+
+
+
+	/*Client* client = new Client("localhost", 2663);
 
 	unsigned long BIG_TEST_SIZE = 32;
 	char* BIG_TEST = (char*)malloc(BIG_TEST_SIZE);
@@ -28,6 +32,7 @@ void main(){
 
 	while (1)
 		Sleep(100);
+	*/
 
 	system("pause");
 }

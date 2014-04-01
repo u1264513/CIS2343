@@ -78,11 +78,25 @@
   <ItemGroup>
     <ClCompile Include="..\Network\Client.cpp" />
     <ClCompile Include="..\Network\Packet.cpp" />
+    <ClCompile Include="Combustible.cpp" />
+    <ClCompile Include="Electric.cpp" />
+    <ClCompile Include="Fuel.cpp" />
+    <ClCompile Include="FuelPoint.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="Station.cpp" />
+    <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Network\Client.h" />
     <ClInclude Include="..\Network\Packet.h" />
+    <ClInclude Include="Combustible.h" />
+    <ClInclude Include="Electric.h" />
+    <ClInclude Include="Fuel.h" />
+    <ClInclude Include="FuelPoint.h" />
+    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="Station.h" />
+    <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
