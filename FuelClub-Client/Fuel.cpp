@@ -9,15 +9,19 @@ Fuel::~Fuel() {
 }
 
 Fuel::Type Fuel::getType() {
-	return type;
+	return this->type;
 }
 
 double Fuel::getPrice() {
-	return price;
+	return this->price;
 }
 
 double Fuel::getConsumption() {
-	return consumption;
+	return this->consumption;
+}
+
+double Fuel::getAmount() {
+	return this->amount;
 }
 
 Fuel::Type Fuel::setType(Type type) {
@@ -33,4 +37,9 @@ double Fuel::setPrice(double price) {
 double Fuel::setConsumption(double consumption) {
 	this->consumption = consumption;
 	return this->consumption;
+}
+
+double Fuel::setAmount(double amount) {
+	this->amount = amount;
+	return this->amount;
 }

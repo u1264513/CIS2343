@@ -4,7 +4,7 @@
 class Combustible : public Fuel {
 
 public:
-	Combustible();
+	Combustible(Type type);
 	~Combustible();
 
 	Type setType(Type type);

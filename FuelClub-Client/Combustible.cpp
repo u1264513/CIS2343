@@ -1,8 +1,8 @@
 #include "Combustible.h"
 
 
-Combustible::Combustible() {
-	
+Combustible::Combustible(Type type) {
+	setType(type);
 }
 
 

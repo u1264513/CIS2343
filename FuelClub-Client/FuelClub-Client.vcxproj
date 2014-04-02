@@ -79,6 +79,7 @@
     <ClCompile Include="..\Network\Client.cpp" />
     <ClCompile Include="..\Network\Packet.cpp" />
     <ClCompile Include="Combustible.cpp" />
+    <ClCompile Include="Customer.cpp" />
     <ClCompile Include="Electric.cpp" />
     <ClCompile Include="Fuel.cpp" />
     <ClCompile Include="FuelPoint.cpp" />
@@ -91,6 +92,7 @@
     <ClInclude Include="..\Network\Client.h" />
     <ClInclude Include="..\Network\Packet.h" />
     <ClInclude Include="Combustible.h" />
+    <ClInclude Include="Customer.h" />
     <ClInclude Include="Electric.h" />
     <ClInclude Include="Fuel.h" />
     <ClInclude Include="FuelPoint.h" />

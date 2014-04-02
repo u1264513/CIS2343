@@ -2,7 +2,7 @@
 
 
 Electric::Electric() {
-
+	setType(Fuel::Type::Electric);
 }
 
 
@@ -13,8 +13,7 @@ Electric::~Electric() {
 Fuel::Type Electric::setType(Type type) {
 	if (type == Fuel::Type::Electric) {
 		this->type = type;
-	}
-	else {
+	} else {
 		printf("Error : Invalid fuel type for 'Electric' object!\n");
 	}
 	return this->type;

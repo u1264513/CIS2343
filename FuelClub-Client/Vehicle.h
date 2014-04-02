@@ -11,14 +11,8 @@ public:
 	Vehicle(Type type, Fuel::Type fuel);
 	~Vehicle();
 
-	bool inQueue();
-
-	bool setQueueStatus(bool inQueue);
-
 protected:
 	Type type;
-	Fuel* fuel;
+	Fuel::Type fuel;
 	double consumed;
-
-	bool queue;
 };
