@@ -1,5 +1,7 @@
 #include "Client.h"
 
+#include "../FuelClub-Client/GUI.h"
+
 void WINAPI ReceiveStub(void* ptr) {
 	return ((Client*)ptr)->Receive();
 }
@@ -10,6 +12,7 @@ Client::Client(char* ip, int port) {
 	serverSocket = NULL;
 	receiveThread = NULL;
 	recv_callback = NULL;
+	isConnected = false;
 
 	WSADATA wsaData;
 	if(WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {
@@ -37,11 +40,14 @@ Client::Client(char* ip, int port) {
 		return;
 	}
 
-	receiveThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ReceiveStub, this, 0, NULL);
+	GUI::addListItem(ID_LIST, "Connected to server");
 
-		if (!receiveThread) {
-			printf("Error : could not create receiveThread.\n");
-		}
+	receiveThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ReceiveStub, this, 0, NULL);
+	if (!receiveThread) {
+		printf("Error : could not create receiveThread.\n");
+	}
+
+	this->isConnected = true;
 }
 
 Client::~Client() {
@@ -90,7 +96,7 @@ void Client::Receive() {
 
 			//Received Full Packet
 			if (recvPacketLen && recvPacketLen == header.length) {
-				recv_callback(packet);
+				if (recv_callback) recv_callback(packet);
 				recvPacketLen = 0;
 				ZeroMemory(&header, sizeof(Packet::Header));
 			}

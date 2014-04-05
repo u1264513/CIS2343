@@ -2,12 +2,15 @@
 
 
 FuelPoint::FuelPoint() {
-
+	this->customer = NULL;
+	this->selfServe = false;
 }
 
 
 FuelPoint::~FuelPoint() {
-
+	for(int i=0;i<fuels.size();i++)
+		delete fuels[i];
+	delete customer;
 }
 
 void FuelPoint::addFuel(Fuel* fuel) {
@@ -27,4 +30,20 @@ bool FuelPoint::isSelfServe() {
 bool FuelPoint::setSelfServe(bool selfServe) {
 	this->selfServe = selfServe;
 	return this->selfServe;
+}
+
+Customer* FuelPoint::getCustomer() {
+	return this->customer;
+}
+
+Customer* FuelPoint::setCustomer(Customer* customer) {
+	this->customer = customer;
+	return this->customer;
+}
+
+bool FuelPoint::hasFuelType(Fuel::Type type) {
+	for (int i=0;i<fuels.size();i++)
+		if (fuels[i]->getType() == type)
+			return true;
+	return false;
 }

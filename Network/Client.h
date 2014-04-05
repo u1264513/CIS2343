@@ -28,5 +28,7 @@ private:
 
 	HANDLE receiveThread;
 	Client_RecvCallback recv_callback;
+
+	bool isConnected;
 };
 

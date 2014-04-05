@@ -16,6 +16,12 @@
     <Filter Include="Network">
       <UniqueIdentifier>{84437ddc-ab96-468f-88df-098afb25c67e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{5e5977ad-4211-4c94-9bd7-cae792292348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileHandler">
+      <UniqueIdentifier>{99202439-cb37-4262-9caf-0ad7da8ed56d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,6 +57,15 @@
     <ClCompile Include="Customer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Timestamp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FileHandler\FileHandler.cpp">
+      <Filter>FileHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Network\Client.h">
@@ -83,5 +98,22 @@
     <ClInclude Include="Customer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Timestamp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FileHandler\FileHandler.h">
+      <Filter>FileHandler</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GUI.rc">
+      <Filter>GUI</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

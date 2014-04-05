@@ -1,5 +1,7 @@
 #include "Server.h"
 
+#include "../FuelClub-Server/GUI.h"
+
 void WINAPI ListenStub(void* ptr) {
 	return ((Server*)ptr)->Listen();
 }
@@ -30,7 +32,7 @@ Server::Server(int port) {
 	char hostName[256];
 	gethostname(hostName, sizeof(hostName));
     hostent* host_entry = gethostbyname(hostName);
-    char* localIP = inet_ntoa (*(in_addr*)*host_entry->h_addr_list);
+    this->localIP = inet_ntoa (*(in_addr*)*host_entry->h_addr_list);
 	printf("Local IP : %s\n\n", localIP);
 
     if ((listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET) {
@@ -78,6 +80,7 @@ void Server::Listen() {
 			}
 
 		printf("Client %d Connected - %s\n",client->id, inet_ntoa(client->socketAddress.sin_addr));
+		GUI::addListItem(ID_LIST, "STATION #%d - Connected", client->id);
 
 		ReceiveStubParam* param = new ReceiveStubParam();
 		param->server = this;
@@ -130,7 +133,7 @@ void Server::Receive(ServerClient* client) {
 
 			//Received Full Packet
 			if (recvPacketLen && recvPacketLen == header.length) {
-				recv_callback(client, packet);
+				if (recv_callback) recv_callback(client, packet);
 				recvPacketLen = 0;
 				ZeroMemory(&header, sizeof(Packet::Header));
 			}
@@ -151,4 +154,8 @@ int Server::Send(ServerClient* client, Packet* packet) {
 
 void Server::SetRecvCallback(Server_RecvCallback callback){
 	recv_callback = callback;
+}
+
+char* Server::getLocalIP() {
+	return this->localIP;
 }

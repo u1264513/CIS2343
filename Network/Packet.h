@@ -17,7 +17,6 @@ public:
 
 	Packet(unsigned char* data, unsigned long length);
 	Packet(Header* header);
-	Packet(char* recvData, unsigned long recvLen);
 	~Packet();
 
 	void AddData(unsigned char* data, unsigned long length);

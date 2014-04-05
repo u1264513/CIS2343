@@ -15,7 +15,10 @@ public:
 	Simulation(Client* client, int stations);
 	~Simulation();
 
+	void Tick();
+
 private:
+	time_t simulation_time;
 	std::vector<Station*> stations;
 
 	int GenerateRandomNumber(int min, int max);

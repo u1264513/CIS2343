@@ -16,6 +16,11 @@ public:
 	bool isSelfServe();
 	bool setSelfServe(bool isSelfServe);
 
+	Customer* getCustomer();
+	Customer* setCustomer(Customer* customer);
+
+	bool hasFuelType(Fuel::Type type);
+
 protected:
 	vector<Fuel*> fuels;
 

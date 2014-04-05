@@ -16,6 +16,12 @@
     <Filter Include="Network">
       <UniqueIdentifier>{42b70ea2-2229-4066-aecb-067cf7a8f068}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{d4325f58-4ac0-4929-89e3-a5445d89b0ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileHandler">
+      <UniqueIdentifier>{07e8a6d6-e368-4cd5-8917-2617d7fa397e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,6 +33,12 @@
     <ClCompile Include="..\Network\Server.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FileHandler\FileHandler.cpp">
+      <Filter>FileHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Network\Packet.h">
@@ -35,5 +47,19 @@
     <ClInclude Include="..\Network\Server.h">
       <Filter>Network</Filter>
     </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FileHandler\FileHandler.h">
+      <Filter>FileHandler</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GUI.rc">
+      <Filter>GUI</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

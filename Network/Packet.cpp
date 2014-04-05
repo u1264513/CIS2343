@@ -32,9 +32,10 @@ Packet::~Packet() {
 }
 
 void Packet::AddData(unsigned char* data, unsigned long length) {
-	packet = (unsigned char*)realloc(packet, (packetLength+length));
+	packet = (unsigned char*)realloc(packet, (packetLength+length+1));
 	memcpy(packet+packetLength, data, length);
 	packetLength += length;
+	packet[packetLength] = 0x00;
 }
 
 unsigned char* Packet::raw() {

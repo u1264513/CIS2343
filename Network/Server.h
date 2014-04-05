@@ -32,6 +32,8 @@ public:
 
 	void SetRecvCallback(Server_RecvCallback callback);
 
+	char* getLocalIP();
+
 private:
 	SOCKET listenSocket;
 	HANDLE listenThread;
@@ -40,5 +42,6 @@ private:
 
 	vector<ServerClient*> clients;
 	int clientId;
+	char* localIP;
 
 };
