@@ -70,7 +70,7 @@ Server::Server(int port) {
 
 /** Destructor
  */
-Server::~Server(void) {
+Server::~Server() {
 	closesocket(listenSocket);
     WSACleanup();
 }
@@ -78,41 +78,47 @@ Server::~Server(void) {
 /** Listens for incoming client connections
  */
 void Server::Listen() {
+
+	//Listen for clients
 	while (listen(listenSocket, SOMAXCONN) != SOCKET_ERROR) {
 
+		//Accept client connection
 		ServerClient* client = new ServerClient();
 		client->id = clientId;
 		client->clientSocket = accept(listenSocket, (sockaddr*)&client->socketAddress, NULL);
 
-			if (client->clientSocket == INVALID_SOCKET) {
-				printf("Error : accept failed (%d).\n", WSAGetLastError());
-				closesocket(listenSocket);
-				WSACleanup();
-				return;
-			}
+		if (client->clientSocket == INVALID_SOCKET) {
+			printf("Error : accept failed (%d).\n", WSAGetLastError());
+			closesocket(listenSocket);
+			WSACleanup();
+			return;
+		}
 
 		printf("Client %d Connected - %s\n",client->id, inet_ntoa(client->socketAddress.sin_addr));
 		GUI::addListItem(ID_LIST, "STATION #%d - Connected", client->id);
 
+		//Create receive thread
 		ReceiveStubParam* param = new ReceiveStubParam();
 		param->server = this;
 		param->client = client;
 		client->receiveThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ReceiveStub, param, 0, NULL);
 
-			if (!client->receiveThread) {
-				printf("Error : could not create receiveThread.\n");
-			}
+		if (!client->receiveThread) {
+			printf("Error : could not create receiveThread.\n");
+		}
 
+		//Add client to client list
 		clients.push_back(client);
 		clientId++;
     }
+
 	printf("Error : listen failed (%d).\n", WSAGetLastError());
     closesocket(listenSocket);
     WSACleanup();
 }
 
 /** Receive thread which handles the raw data received from a client and initiates the receive callback.
- *  @param client Client we are receiving data from
+ *  @param client Pointer to client object we are receiving data from
  */
 void Server::Receive(ServerClient* client) {
 	unsigned char buffer[RECV_BUFFER];
@@ -133,7 +139,6 @@ void Server::Receive(ServerClient* client) {
 			if (recvPacketLen == 0 && (len >= sizeof(Packet::Header)) && ((*(unsigned long*)buffer) == PACKET_MAGIC || (*(unsigned long*)buffer) == PACKET_MAGIC_CRYPT)) {
 				memcpy(&header, buffer, sizeof(Packet::Header));
 				packet = new Packet(&header);
-
 				packet->AddData(buffer+sizeof(Packet::Header), len-sizeof(Packet::Header));
 				recvPacketLen += len-sizeof(Packet::Header);
 
@@ -154,7 +159,7 @@ void Server::Receive(ServerClient* client) {
 				ZeroMemory(&header, sizeof(Packet::Header));
 			}
 
-		//Client disconnected?
+		//Disconnected?
 		} else if (len == 0) {
 			printf("Client %d Disconnected\n", client->id);
 			closesocket(client->clientSocket);
@@ -164,17 +169,32 @@ void Server::Receive(ServerClient* client) {
 	} while(len > 0);
 }
 
+/** 
+ *  @param client Pointer to client object to send data to
+ *  @param data Data to send to client
+ *  @param length Length of data to send to client
+ */
 int Server::Send(ServerClient* client, unsigned char* data, unsigned long length) {
 	return send(client->clientSocket, (char*)data, length, 0);
 }
+
+/** Send packet to client
+ *  @param client Pointer to client object to send packet to
+ *  @param packet Packet to send to client
+ */
 int Server::Send(ServerClient* client, Packet* packet) {
 	return Send(client, packet->raw(), packet->rawLength());
 }
 
+/** Set receive callback to call in receive thread
+ *  @param callback Call back function
+ */
 void Server::SetRecvCallback(Server_RecvCallback callback){
 	recv_callback = callback;
 }
 
+/** Return local IP
+ */
 char* Server::getLocalIP() {
 	return this->localIP;
 }
