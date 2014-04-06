@@ -85,7 +85,6 @@ void Packet::crypt() {
 		(*(Header*)packet).magic = PACKET_MAGIC;
 	}
 
-	//Basic XOR cipher
 	for(unsigned long i=0;i<dataLength();i++)
 		data()[i] ^= 0xC3;
 }

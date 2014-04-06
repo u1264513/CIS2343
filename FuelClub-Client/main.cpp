@@ -25,14 +25,40 @@ void SimulationThread() {
 	}
 }
 
+bool isValidIP(char* ip) {
+	if (strlen(ip) == 0 || strlen(ip) > 16) return false;
+	for (int i=0;i<strlen(ip); i++)
+		if ((ip[i] < '0' || ip[i] > '9') && ip[i] != '.')
+			return false;
+	return true;
+}
+
+bool isValidPort(char* port) {
+	if (strlen(port) == 0) return false;
+	for (int i=0;i<strlen(port);i++)
+	if (port[i] < '0' || port[i] > '9')
+		return false;
+	return true;
+}
+
 BOOL CALLBACK DialogProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
     switch(Message) {
 		case WM_COMMAND:
 			switch(LOWORD(wParam)) {
 				case ID_CONNECT: {
-					GUI::addListItem(ID_LIST, "Connecting to %s:%s", GUI::getText(ID_IP), GUI::getText(ID_PORT));
-					client = new Client(GUI::getText(ID_IP), atoi(GUI::getText(ID_PORT)));
-					GUI::setEnabled(ID_CONNECT, false);
+					if (isValidIP(GUI::getText(ID_IP)) && isValidPort(GUI::getText(ID_PORT))) {
+						GUI::addListItem(ID_LIST, "Connecting to %s:%s", GUI::getText(ID_IP), GUI::getText(ID_PORT));
+						client = new Client(GUI::getText(ID_IP), atoi(GUI::getText(ID_PORT)));
+						GUI::setEnabled(ID_CONNECT, false);
+						Sleep(2000);
+						if (!client->isConnected()){
+							MessageBox(0, "Error : Could NOT connect!", "Error", 0);
+							delete client;
+							GUI::setEnabled(ID_CONNECT, true);
+						}
+					} else {
+						MessageBox(0, "Error : Invalid IP/Port!", "Error", MB_ICONERROR);
+					}
 				}
 				break;
 				case ID_SIMULATE: {

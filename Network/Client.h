@@ -23,12 +23,14 @@ public:
 	void Receive();
 	void SetRecvCallback(Client_RecvCallback callback);
 
+	bool isConnected();
+
 private:
 	SOCKET serverSocket;
 
 	HANDLE receiveThread;
 	Client_RecvCallback recv_callback;
 
-	bool isConnected;
+	bool connected;
 };
 

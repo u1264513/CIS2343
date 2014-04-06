@@ -18,20 +18,32 @@ void Server_Receive(Server::ServerClient* client, Packet* packet) {
 	serverLog->Write("STATION #%d - %s", client->id, packet->data());
 }
 
+bool isValidPort(char* port) {
+	if (strlen(port) == 0) return false;
+	for (int i=0;i<strlen(port);i++)
+		if (port[i] < '0' || port[i] > '9')
+			return false;
+	return true;
+}
+
 BOOL CALLBACK DialogProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
     switch(Message) {
 		case WM_COMMAND:
 			switch(LOWORD(wParam)) {
 				case ID_LISTEN: {
-					GUI::addListItem(ID_LIST, "Listening on port %s...", GUI::getText(ID_PORT));
-					serverLog = new FileHandler("data.log");
-					server = new Server(atoi(GUI::getText(ID_PORT)));
-					server->SetRecvCallback(Server_Receive);
-					GUI::setText(ID_IP, server->getLocalIP());
-					GUI::setEnabled(ID_LISTEN, false);
+					if (isValidPort(GUI::getText(ID_PORT))) {
+						GUI::addListItem(ID_LIST, "Listening on port %s...", GUI::getText(ID_PORT));
+						serverLog = new FileHandler("data.log");
+						server = new Server(atoi(GUI::getText(ID_PORT)));
+						server->SetRecvCallback(Server_Receive);
+						GUI::setText(ID_IP, server->getLocalIP());
+						GUI::setEnabled(ID_LISTEN, false);
+					} else {
+						MessageBox(0, "Error : Invalid Port!", "Error", MB_ICONERROR);
+					}
 				}
 				break;
-		}
+			}
 		break;
 		case WM_CLOSE:
 			DestroyWindow(hwnd);

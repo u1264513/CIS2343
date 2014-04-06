@@ -12,7 +12,7 @@ Client::Client(char* ip, int port) {
 	serverSocket = NULL;
 	receiveThread = NULL;
 	recv_callback = NULL;
-	isConnected = false;
+	connected = false;
 
 	WSADATA wsaData;
 	if(WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {
@@ -47,7 +47,7 @@ Client::Client(char* ip, int port) {
 		printf("Error : could not create receiveThread.\n");
 	}
 
-	this->isConnected = true;
+	this->connected = true;
 }
 
 Client::~Client() {
@@ -110,4 +110,8 @@ void Client::Receive() {
 
 void Client::SetRecvCallback(Client_RecvCallback callback){
 	recv_callback = callback;
+}
+
+bool Client::isConnected() {
+	return this->connected;
 }
