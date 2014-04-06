@@ -14,6 +14,9 @@ void WINAPI ReceiveStub(ReceiveStubParam* ptr) {
 	return ((Server*)ptr->server)->Receive((Server::ServerClient*)ptr->client);
 }
 
+/** Constructor to create server object and create a listen thread
+ *  @param port Port to listen on
+ */
 Server::Server(int port) {
 
 	//Initialize Variables
@@ -24,17 +27,20 @@ Server::Server(int port) {
 
 	WSADATA wsaData;
 
+	//Initialize winsock
 	if(WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {
         printf("Error : WSAStartup failed.\n");
         return;
     }
 
+	//Obtain local IP
 	char hostName[256];
 	gethostname(hostName, sizeof(hostName));
     hostent* host_entry = gethostbyname(hostName);
     this->localIP = inet_ntoa (*(in_addr*)*host_entry->h_addr_list);
 	printf("Local IP : %s\n\n", localIP);
 
+	//Create socket
     if ((listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET) {
         printf("Error : listenSocket failed (%d).\n", WSAGetLastError());
         WSACleanup();
@@ -46,6 +52,7 @@ Server::Server(int port) {
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(port);
 
+	//Bind socket
     if (bind(listenSocket, (SOCKADDR*)&addr, sizeof(sockaddr_in)) == SOCKET_ERROR) {
         printf("Error : bind failed (%d).\n", WSAGetLastError());
         closesocket(listenSocket);
@@ -53,18 +60,23 @@ Server::Server(int port) {
         return;
     }
 
+	//Create listen thread
 	listenThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ListenStub, this, 0, NULL);
 
-		if (!listenThread) {
-			printf("Error : could not create listenThread.\n");
-		}
+	if (!listenThread) {
+		printf("Error : could not create listenThread.\n");
+	}
 }
 
+/** Destructor
+ */
 Server::~Server(void) {
 	closesocket(listenSocket);
     WSACleanup();
 }
 
+/** Listens for incoming client connections
+ */
 void Server::Listen() {
 	while (listen(listenSocket, SOMAXCONN) != SOCKET_ERROR) {
 
@@ -99,6 +111,9 @@ void Server::Listen() {
     WSACleanup();
 }
 
+/** Receive thread which handles the raw data received from a client and initiates the receive callback.
+ *  @param client Client we are receiving data from
+ */
 void Server::Receive(ServerClient* client) {
 	unsigned char buffer[RECV_BUFFER];
 	int len = 0;
@@ -111,9 +126,10 @@ void Server::Receive(ServerClient* client) {
 		ZeroMemory(buffer, sizeof(buffer));
 		len = recv(client->clientSocket, (char*)buffer, sizeof(buffer), 0);
 
+		//Received data?
 		if (len > 0) {
 
-			//Received Packet
+			//Received packet, create packet object
 			if (recvPacketLen == 0 && (len >= sizeof(Packet::Header)) && ((*(unsigned long*)buffer) == PACKET_MAGIC || (*(unsigned long*)buffer) == PACKET_MAGIC_CRYPT)) {
 				memcpy(&header, buffer, sizeof(Packet::Header));
 				packet = new Packet(&header);
@@ -121,27 +137,30 @@ void Server::Receive(ServerClient* client) {
 				packet->AddData(buffer+sizeof(Packet::Header), len-sizeof(Packet::Header));
 				recvPacketLen += len-sizeof(Packet::Header);
 
-			//Received Packet Data
+			//Received packet data, add data to packet object
 			} else if (recvPacketLen && (recvPacketLen < header.length)) {
 				packet->AddData(buffer, len);
 				recvPacketLen += len;
 
-			//Invalid Packet
+			//Invalid packet
 			} else {
 				printf("Error : Could NOT receive valid packet!\n");
 			}
 
-			//Received Full Packet
+			//Received entire packet, initiate recv_callback
 			if (recvPacketLen && recvPacketLen == header.length) {
 				if (recv_callback) recv_callback(client, packet);
 				recvPacketLen = 0;
 				ZeroMemory(&header, sizeof(Packet::Header));
 			}
 
+		//Client disconnected?
 		} else if (len == 0) {
 			printf("Client %d Disconnected\n", client->id);
 			closesocket(client->clientSocket);
 		}
+
+	//Loop while receiving data
 	} while(len > 0);
 }
 

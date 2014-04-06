@@ -42,8 +42,6 @@ private:
 
 	double* fuelPrices;
 
-	int fuelPointsAvailable;
-
 	int transactions;
 	double revenue;
 
